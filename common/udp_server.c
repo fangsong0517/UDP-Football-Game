@@ -6,7 +6,7 @@
  ************************************************************************/
 
 #include "head.h"
-
+#include "color.h"
 int sock_create_udp(int port) {
     int server_listen;
     if((server_listen = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
@@ -18,9 +18,10 @@ int sock_create_udp(int port) {
     server.sin_addr.s_addr = INADDR_ANY;
 
     int flag = 1;
-    setsockopt(server_listen, SOL_SOCKET, SO_REUSERADDR, &flag, sizeof(flag));
+    setsockopt(server_listen, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag));
 
     make_nonblock(server_listen);
+    
     if(bind(server_listen, (struct sockaddr *)&server, sizeof(server)) < 0) {
         return -1;
     }
