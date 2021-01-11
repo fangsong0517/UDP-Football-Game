@@ -9,6 +9,7 @@
 #include "../common/color.h"
 #include "../common/udp_server.h"
 #include "../common/common.h"
+#include "../common/game.h"
 
 char *conf = "./server.conf";
 
@@ -33,7 +34,13 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
+
     if(!port) port = atoi(get_value(conf, "PORT"));
+
+    court.width = atoi(get_value(conf, "COLS"));
+    court.height = atoi(get_value(conf, "LINES"));
+    court.start.x = 3;
+    court.start.y = 1;
 
     if((listener = socket_create_udp(port)) < 0) {
         perror("socket_create_udp");

@@ -1,0 +1,1 @@
+gcc server.c ../common/common.c ../common/global.c ../common/udp_server.c ../common/game.c -lcurses -lpthread

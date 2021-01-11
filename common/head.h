@@ -26,5 +26,7 @@
 #include<curses.h>
 #include<signal.h>
 #include "./global.h"
-
+#include "./common.h"
+#include "./color.h"
+#include "./datatype.h"
 #endif

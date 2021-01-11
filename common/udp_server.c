@@ -7,7 +7,7 @@
 
 #include "head.h"
 #include "color.h"
-int sock_create_udp(int port) {
+int socket_create_udp(int port) {
     int server_listen;
     if((server_listen = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
         return -1;
