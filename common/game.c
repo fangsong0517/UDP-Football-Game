@@ -15,6 +15,7 @@ WINDOW *create_newwin(int width, int height, int startx, int starty) {
     win = newwin(height, width, starty, startx);
     box(win, 0, 0);
     wrefresh(win);
+    move(LINES - 1, 1);
     return win;
 }
 
@@ -76,12 +77,16 @@ void initfootball() {
     init_pair(11, COLOR_BLUE, COLOR_CYAN);
     init_pair(12, COLOR_BLUE, COLOR_BLUE);
     create_newwin(court.width + 4, court.height + 2, court.start.x - 2, court.start.y - 1);
+    create_newwin(court.width + 4, 7, court.start.x - 2, court.start.y + court.height + 1);
+    create_newwin(20, court.height + 2, court.start.x + court.width + 2, court.start.y - 1);
+    create_newwin(20, 7, court.start.x + court.width + 2, court.start.y + court.height + 1);
+    create_newwin(court.width + 24, 5, court.start.x - 2, court.start.y + 1 + court.height + 7);
 
 }
 
 void *draw(void *arg) {
     initfootball();
     while(1) {
-        
+        sleep(10);
     }
 }
