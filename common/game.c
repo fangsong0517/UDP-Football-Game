@@ -9,7 +9,7 @@
 #include "head.h"
 
 extern struct Map court;
-
+extern WINDOW *Football, *Message, *Help, *Score, *Write, *Football_t;
 WINDOW *create_newwin(int width, int height, int startx, int starty) {
     WINDOW *win;
     win = newwin(height, width, starty, startx);
@@ -80,7 +80,7 @@ void initfootball() {
     create_newwin(court.width + 4, 7, court.start.x - 2, court.start.y + court.height + 1);
     create_newwin(20, court.height + 2, court.start.x + court.width + 2, court.start.y - 1);
     create_newwin(20, 7, court.start.x + court.width + 2, court.start.y + court.height + 1);
-    create_newwin(court.width + 24, 5, court.start.x - 2, court.start.y + 1 + court.height + 7);
+   Message = create_newwin(court.width + 24, 5, court.start.x - 2, court.start.y + 1 + court.height + 7);
 
 }
 

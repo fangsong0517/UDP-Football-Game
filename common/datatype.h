@@ -8,6 +8,13 @@
 #ifndef _DATATYPE_H
 #define _DATATYPE_H
 
+
+struct LogRequest {
+    char name[20];
+    int team;//0 RED, 1 BLUE
+    char msg[512];
+};
+
 struct Point{
     int x;
     int y;

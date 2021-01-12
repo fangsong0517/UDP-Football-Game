@@ -8,8 +8,13 @@
 #ifndef _GAME_H
 #define _GAME_H
 
+
+#define MAX 50
+
 struct Map court;/*球场*/
 
+
+WINDOW *Football, *Message, *Help, *Score, *Write, Football_t;
 WINDOW *create_newwin(int width, int height, int startx, int starty);
 
 void destroy_win(WINDOW *win);
