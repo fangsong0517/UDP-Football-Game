@@ -18,7 +18,7 @@ struct User *bteam;
 char *conf = "./server.conf";
 
 int main(int argc, char **argv) {
-    int opt, port = 0, listener;
+    int opt, port = 0, listener, epoll_fd;
     pthread_t draw_t;
     while((opt = getopt(argc, argv, "p:")) != -1) {
         switch(opt) {
@@ -56,15 +56,29 @@ int main(int argc, char **argv) {
     pthread_create(&draw_t, NULL, draw, NULL);
 
 
+    epoll_fd = epoll_create(MAX * 2);
+
+    struct epoll_event ev, events[MAX * 2];
+    ev.events = EPOLLIN;
+    ev.data.fd = listener;
+
+    epoll_ctl(epoll_fd, EPOLL_CTL_ADD, listener, &ev);
+    struct LogRequest lg;
+    struct sockaddr_in client;
+    socklen_t len = sizeof(client);
+
     while(1) {
-        w_gotoxy_puts(Message, 1, 1, "test");
-        struct LogRequest lg;
-        struct sockaddr_in client;
-        socklen_t len = sizeof(client);
-        recvfrom(listener, (void *)&lg, sizeof(lg), 0, (struct sockaddr *)&client, &len);
-        char info[1024];
-        sprintf(info, "Login : %s : %d\n", inet_ntoa(client.sin_addr), ntohs(client.sin_port));
-        w_gotoxy_puts(Message, 1, 2, info);
+    
+        w_gotoxy_puts(Message, 1, 1, "Waiting for login!");
+        int nfds = epoll_wait(epoll_fd, events, MAX * 2, -1);
+
+        for(int i = 0; i < nfds; i++) {
+            char info[1024];
+            recvfrom(events[i].data.fd, (void *)&info, sizeof(info), 0, (struct sockaddr *)&client, &len);
+            sprintf(info, "Login : %s : %d\n", inet_ntoa(client.sin_addr), ntohs(client.sin_port));
+            w_gotoxy_puts(Message, 1, 2, info);
+
+        }
     }
 
     return 0;
