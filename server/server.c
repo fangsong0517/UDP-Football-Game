@@ -8,9 +8,10 @@
 #include "../common/head.h"
 #include "../common/color.h"
 #include "../common/udp_server.h"
+
+#include "../common/udp_epoll.h"
 #include "../common/common.h"
 #include "../common/game.h"
-
 
 struct User *rteam;
 struct User *bteam;
@@ -53,7 +54,7 @@ int main(int argc, char **argv) {
 
     DBG(GREEN"INFO"NONE " : Server start on Port %d\n", port);
 
-    pthread_create(&draw_t, NULL, draw, NULL);
+  //  pthread_create(&draw_t, NULL, draw, NULL);
 
 
     epoll_fd = epoll_create(MAX * 2);
@@ -73,6 +74,10 @@ int main(int argc, char **argv) {
         int nfds = epoll_wait(epoll_fd, events, MAX * 2, -1);
 
         for(int i = 0; i < nfds; i++) {
+            if(events[i].data.fd == listener) {//listen
+                //accept();
+                udp_accept(epoll_fd, listener);
+            }
             char info[1024];
             recvfrom(events[i].data.fd, (void *)&info, sizeof(info), 0, (struct sockaddr *)&client, &len);
             sprintf(info, "Login : %s : %d\n", inet_ntoa(client.sin_addr), ntohs(client.sin_port));
