@@ -26,13 +26,13 @@ void del_event(int epollfd, int fd, int events) {
 }
 
 
-int udp_connect(int epollfd, struct sockaddr * serveraddr) {
+int udp_connect(int epollfd, struct sockaddr_in * serveraddr) {
     int sockfd;
     if((sockfd = socket_udp()) < 0) {
         perror("socket_udp");
         return -1;
     }
-    if(connect(sockfd, (struct sockaddr *)&serveraddr, sizeof(struct sockaddr)) < 0) {
+    if(connect(sockfd, (struct sockaddr *)serveraddr, sizeof(struct sockaddr)) < 0) {
         perror("connect");
         return -1;
     }
@@ -49,7 +49,11 @@ int udp_accept(int epollfd, int fd) {
     if(ret < 0) {
         return -1;
     }
+
     DBG(GREEN"INFO"NONE " : %s : %d login!\n", inet_ntoa(client.sin_addr), ntohs(client.sin_port));
-    new_fd = udp_connect(epollfd, (struct sockaddr *)&client);
+    
+
+    DBG(PINK"RECV"NONE" : %s \n", msg);
+    new_fd = udp_connect(epollfd, &client);
     return new_fd;
 }
