@@ -18,8 +18,10 @@ struct User *bteam;
 
 char *conf = "./server.conf";
 
+int port;
+
 int main(int argc, char **argv) {
-    int opt, port = 0, listener, epoll_fd;
+    int opt, listener, epoll_fd;
     pthread_t draw_t;
     while((opt = getopt(argc, argv, "p:")) != -1) {
         switch(opt) {
