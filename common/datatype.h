@@ -15,6 +15,12 @@ struct LogRequest {
     char msg[512];
 };
 
+struct LogResponse{
+    int type;
+    char msg[512];
+
+};
+
 struct Point{
     int x;
     int y;
