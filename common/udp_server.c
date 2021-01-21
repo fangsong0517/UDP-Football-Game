@@ -20,7 +20,7 @@ int socket_create_udp(int port) {
     int flag = 1;
     setsockopt(server_listen, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag));
 
-    make_nonblock(server_listen);
+    make_nonblock(server_listen);/*不用等不用关注*/
     
     if(bind(server_listen, (struct sockaddr *)&server, sizeof(server)) < 0) {
         return -1;
