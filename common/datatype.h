@@ -32,6 +32,7 @@ struct User{
     int fd;
     char name[20];
     int flag;       /*未响应的次数*/
+    int online;
     struct sockaddr_in addr;
     struct Point loc;
 };
