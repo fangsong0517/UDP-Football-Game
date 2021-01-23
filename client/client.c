@@ -70,15 +70,64 @@ int main(int argc, char **argv) {
     }
 
     sendto(sockfd, (void *)&request , sizeof(request), 0, (struct sockaddr *)&server, len);
-    int ret = recvfrom(sockfd, (void *)&response, sizeof(response), 0, (struct sockaddr *)&server, &len);
-    if(ret != sizeof(response) || response.type) {
-        DBG(RED"ERROR : "NONE"The Game Server refused login!.\n\tThis May be helpfull: %s\n", response.msg);
+
+    fd_set set;
+    FD_ZERO(&set);
+    FD_SET(sockfd, &set);
+    struct timeval tv;
+    tv.tv_sec = 5;
+    tv.tv_usec = 0;
+
+    int retval = select(sockfd + 1, &set, NULL, NULL, &tv);
+    if(retval == -1) {
+        perror("select");
+        exit(1);
+    } else if(retval) {
+        int ret = recvfrom(sockfd, (void *)&response, sizeof(response), 0, (struct sockaddr *)&server, &len);
+        if(ret != sizeof(response) || response.type) {
+            DBG(RED"ERROR : "NONE"The Game Server refused login!.\n\tThis May be helpfull: %s\n", response.msg);
+            exit(1);
+        }
+    } else {
+        DBG(RED"ERROR : "NONE"The Game Server is out of service.\n");
         exit(1);
     }
 
-    DBG(PINK"RECV : %s"NONE, response.msg);
+
+    DBG(PINK"RECV : %s\n"NONE, response.msg);
     connect(sockfd, (struct sockaddr *)&server, len);
 
+    pid_t pid;
+    if((pid = fork()) < 0) {
+        perror("fork");
+        exit(1);
+    }
+    if(pid == 0) {
+        fclose(stdin);
+        while(1) {
+            struct FootBallMsg msg;
+            ssize_t rsize = recv(sockfd, (void *)&msg, sizeof(msg), 0);
+            if(msg.type & FT_TEST) {
+                DBG(RED"HeartBeat from Server 心\n"NONE);
+                msg.type = FT_ACK;
+                send(sockfd, (void *)&msg, sizeof(msg), 0);
+            } else if(msg.type & (FT_MSG | FT_WALL)) {
+                DBG(GREEN"Server Msg : "NONE"%s\n", msg.msg);
+            } else {
+                DBG(GREEN"Server Msg : "NONE"Unsupport Message Type.\n");
+            }
+        }
+    } else {
+        while(1) {
+            struct FootBallMsg msg;
+            msg.type = FT_MSG;
+            DBG(YELLOW"Input Message :"NONE);
+            fflush(stdout);
+            scanf("%[^\n]s", msg.msg);
+            getchar();
+            send(sockfd, (void *)&msg, sizeof(msg), 0);
+        }
+    }
     sleep(10);
 
     return 0;
