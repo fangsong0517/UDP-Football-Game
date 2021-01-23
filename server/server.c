@@ -9,6 +9,7 @@
 #include "../common/color.h"
 #include "../common/udp_server.h"
 #include "../common/thread_pool.h"
+#include "../common/sub_reactor.h"
 #include "../common/udp_epoll.h"
 #include "../common/common.h"
 #include "../common/game.h"
