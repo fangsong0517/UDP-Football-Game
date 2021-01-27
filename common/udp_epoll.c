@@ -33,11 +33,9 @@ void add_event_ptr(int epollfd, int fd, int events, struct User *user) {
     DBG(GREEN"Sub Thread"NONE" : After Epoll Add %s.\n", user->name);
 }
 
-void del_event(int epollfd, int fd, int events) {
-    struct epoll_event ev;
-    ev.events = events;
-    ev.data.fd = fd;
-    epoll_ctl(epollfd, EPOLL_CTL_DEL, fd, &ev);
+void del_event(int epollfd, int fd) {
+    epoll_ctl(epollfd, EPOLL_CTL_DEL, fd, NULL);
+    return;
 }
 
 
@@ -53,7 +51,7 @@ int udp_connect(int epollfd, struct sockaddr_in * serveraddr) {
     }
     DBG(GREEN"INFO"NONE" : After connect.\n fd = [%d]", sockfd);
     send(sockfd, "Login!", sizeof("Login"), 0);
-    add_event(epollfd, sockfd, EPOLLIN);
+   // add_event(epollfd, sockfd, EPOLLIN);
     return sockfd;
 }
 

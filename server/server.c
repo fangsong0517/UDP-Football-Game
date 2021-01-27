@@ -14,6 +14,7 @@
 #include "../common/heart_beat.h"
 #include "../common/common.h"
 #include "../common/game.h"
+#include "../common/server_exit.h"
 
 struct User *rteam;
 struct User *bteam;
@@ -88,7 +89,7 @@ int main(int argc, char **argv) {
     pthread_create(&blue_t, NULL, sub_reactor, (void *)&blueQueue);
     pthread_create(&heart_t, NULL, head_beat, NULL);
 
-
+    signal(SIGINT, server_exit);
 /*主反应堆*/
     struct epoll_event ev, events[MAX * 2];
     ev.events = EPOLLIN;
@@ -105,7 +106,7 @@ int main(int argc, char **argv) {
 
         DBG(YELLOW"Main Thread"NONE" : before epoll_wait\n");
         int nfds = epoll_wait(epoll_fd, events, MAX * 2, -1);
-        DBG(YELLOW"Main Thread"NONE" : After epoll_wait\n");
+        DBG(YELLOW"Main Thread"NONE" : After epoll_wait.\n");
 
         for(int i = 0; i < nfds; i++) {
 
@@ -114,6 +115,7 @@ int main(int argc, char **argv) {
             char buff[512] = {0};
             DBG(YELLOW"EPOLL"NONE" : Doing with %dth fd\n", i);
             if(events[i].data.fd == listener) {
+                //DBG(GREEN"%d\n"NONE, i);
                 /*listen*/
                 //accept();
                 int new_fd = udp_accept(epoll_fd, listener, &user);
