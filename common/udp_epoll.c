@@ -55,6 +55,14 @@ int udp_connect(int epollfd, struct sockaddr_in * serveraddr) {
     return sockfd;
 }
 
+int check_online(struct LogRequest *request) {
+    for(int i = 0; i < MAX; i++) {
+        if(rteam[i].online && !strcmp(rteam[i].name, request->name))return 1;
+        if(bteam[i].online && !strcmp(bteam[i].name, request->name))return 1;
+    }
+    return 0;
+}
+
 int udp_accept(int epollfd, int fd, struct User *user) {
     struct sockaddr_in client;
     int new_fd, ret;
@@ -74,6 +82,12 @@ int udp_accept(int epollfd, int fd, struct User *user) {
         return -1;
     }
 
+    if(check_online(&request)) {
+        response.type = 1;
+        strcpy(response.msg, "You Are Alreadly Playing This Game someWhere!");
+        sendto(fd, (void *)&response, sizeof(response), 0, (struct sockaddr *)&client, len);
+        return -1;
+    }
     response.type = 0;
     strcpy(response.msg, "Login success .Enjoy yourself.\n");
     sendto(fd, (void *)&response, sizeof(response), 0, (struct sockaddr *)&client, len);
