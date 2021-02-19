@@ -1,12 +1,12 @@
 /*************************************************************************
-	> File Name: heart_beat.h
+	> File Name: ball_status.h
 	> Author:fangsong
 	> Mail: fsrun@outlook.com
-	> Created Time: 2021年01月23日 星期六 21时06分08秒
+	> Created Time: 2021年02月19日 星期五 11时02分21秒
  ************************************************************************/
 
-#ifndef _HEART_BEAT_H
-#define _HEART_BEAT_H
-void heart_beat_team(struct User *team);
-void *heart_beat(void *arg); 
+#ifndef _BALL_STATUS_H
+#define _BALL_STATUS_H
+int can_kick(struct Point *loc, int strength);
 #endif
+

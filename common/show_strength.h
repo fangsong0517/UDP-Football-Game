@@ -1,12 +1,11 @@
 /*************************************************************************
-	> File Name: heart_beat.h
+	> File Name: show_strength.h
 	> Author:fangsong
 	> Mail: fsrun@outlook.com
-	> Created Time: 2021年01月23日 星期六 21时06分08秒
+	> Created Time: 2021年02月19日 星期五 11时09分33秒
  ************************************************************************/
 
-#ifndef _HEART_BEAT_H
-#define _HEART_BEAT_H
-void heart_beat_team(struct User *team);
-void *heart_beat(void *arg); 
+#ifndef _SHOW_STRENGTH_H
+#define _SHOW_STRENGTH_H
+void show_strength();
 #endif

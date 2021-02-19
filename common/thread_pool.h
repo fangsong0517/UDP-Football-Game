@@ -5,26 +5,24 @@
 	> Created Time: 2021年01月21日 星期四 21时42分29秒
  ************************************************************************/
 
-#ifndef _THREAD_POOL_H
-#define _THREAD_POOL_H
-
+#ifndef _THREAD_POLL_H
+#define _THREAD_POLL_H
 #include "head.h"
-#define MAXTASK 100
-#define MAXTHREAD 10
-struct task_queue {
-    int sum;
-    int epollfd;
-    struct User **team;
+#define MAXTASK 100 //最多任务
+#define MAXTHREAD 10 //放10个线程
+struct task_queue{
+    int sum;//多少个
+    int epollfd;//对应的从反应堆
+    struct User **team;//队
     int head;
     int tail;
-    pthread_mutex_t mutex;
+    pthread_mutex_t mutex;//互斥锁
     pthread_cond_t cond;
 };
 
-void task_queue_init(struct task_queue *taskQueue, int sum, int epollfd);
-void task_queue_push(struct task_queue *taskQueue, struct User *user);
-struct User *task_queue_pop(struct task_queue *taskQueue);
-void *thread_run(void *arg);
-
-
+void task_queue_init(struct task_queue *taskQueue, int sum, int epollfd);//初始化
+void task_queue_push(struct task_queue *taskQueue, struct User *user);//入队
+struct User *task_queue_pop(struct task_queue *taskQueue);//弹出一个用户
+void *thread_run(void *arg);//做什么用的，回调函数
 #endif
+
